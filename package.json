@@ -4,18 +4,26 @@
   "description": "Microservice to manage user authentication and profile",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/app.ts",
+    "dev": "nodemon src/server.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^6.0.0",
+    "body-parser": "^1.20.3",
     "express": "^4.21.1",
-    "prisma": "^6.0.0"
+    "inversify": "^6.1.5",
+    "inversify-express-utils": "^6.4.8",
+    "mongoose": "^8.8.3",
+    "reflect-metadata": "^0.2.2",
+    "stripe": "^17.4.0",
+    "umami-anp-service": "file:"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "@types/mongoose": "^5.11.97",
     "@types/node": "^22.10.1",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",

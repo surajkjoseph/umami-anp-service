@@ -15,11 +15,11 @@ export class SignonController extends BaseHttpController {
     async signup(@request() req: Request, @response() res: Response)  {
         try{
             console.log("Starting registering");
-            res.json(await this.service.register(req.body)).status(200);
+            res.status(201).json(await this.service.register(req.body));
             console.log("Completed registering");
-        }catch(error){
-            console.error("Error Occurred", error);
-            res.sendStatus(500);
+        }catch(e: any){
+            console.error("Error Occurred", e);
+            res.status(500).json({ message: 'Error registering', description: e.message });
         }
         
     }
@@ -28,9 +28,9 @@ export class SignonController extends BaseHttpController {
     async retreiveByEmail(@request() req: Request, @response() res: Response)  {
         try {
             res.json(await this.service.retreieveByEmail(req.body['email'])).status(200);
-        } catch (error) {
+        } catch (error : any) {
             console.error("Error Occurred", error);
-            res.sendStatus(500);
+            res.status(500).json({ message: 'Error fetching', description: error.message });
         } 
     }
 

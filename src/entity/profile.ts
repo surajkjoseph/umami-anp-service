@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 interface IProfile extends Document {
-  id: number;
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -11,7 +11,6 @@ interface IProfile extends Document {
 
 const profileSchema: Schema = new Schema(
   {
-    _id: { type: Schema.Types.ObjectId},
     firstName: { type: Schema.Types.String, required: true},
     lastName: { type: Schema.Types.String, required: true},
     email: { type: Schema.Types.String, required: true, unique: true  },

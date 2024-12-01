@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    ports:
+      - "27017:27017"
+
+  umami-anp:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb

@@ -16,23 +16,28 @@ export class SignonService{
     ){}
 
     async register(signupRequest : SignupRequest) : Promise<any> {
-
-        if(!signupRequest.email || !signupRequest.password)
-                throw new Error ("Email and Password is mandatory");
+      
+        if(!signupRequest.email || !signupRequest.password){
+            throw new Error ("Email and Password is mandatory");
+        }
+                
 
         const profile = await this.repository.findProfileByEmail(signupRequest.email);
-        if(profile){
+        if(profile.length > 0){
             throw new Error(`Profile existes with email: ${signupRequest.email}`);
         }
 
         const newProfile = new Profile({
+            firstName: signupRequest.firstName,
+            lastName: signupRequest.lastName,
             email: signupRequest.email,
             password: signupRequest.password,
             isBusinessOwner: signupRequest.isBusinessOwner
         });
+        
 
         const saveProfile = await this.repository.saveProfile(newProfile);
-            
+
         let stripeOnboardUrl : any;
         if(signupRequest.isBusinessOwner){
             stripeOnboardUrl = await this.registerStripeAccount(signupRequest);
@@ -45,6 +50,10 @@ export class SignonService{
 
         
 
+   }
+
+   async retreieveByEmail(email: string) : Promise<any>{
+        return await this.repository.findProfileByEmail(email);
    }
 
    async registerStripeAccount(signupRequest : SignupRequest){

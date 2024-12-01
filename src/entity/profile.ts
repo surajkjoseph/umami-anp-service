@@ -11,12 +11,12 @@ interface IProfile extends Document {
 
 const profileSchema: Schema = new Schema(
   {
-    id: { type: Number, required: true },
-    firstName: { type: String, required: true},
-    lastName: { type: String, required: true},
-    email: { type: String, required: true, unique: true  },
-    password: { type: String, required: true, unique: true  },
-    isBusinessOwner: {type: Boolean, required: true}
+    _id: { type: Schema.Types.ObjectId},
+    firstName: { type: Schema.Types.String, required: true},
+    lastName: { type: Schema.Types.String, required: true},
+    email: { type: Schema.Types.String, required: true, unique: true  },
+    password: { type: Schema.Types.String, required: true, unique: true  },
+    isBusinessOwner: {type: Schema.Types.Boolean, required: true}
   },
   { timestamps: true }
 );

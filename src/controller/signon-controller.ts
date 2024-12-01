@@ -5,7 +5,7 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from '../config/types';
 import { SignonService } from '../service/signon-service';
 
-@controller("/signon")
+@controller("/account")
 export class SignonController extends BaseHttpController {
 
     constructor(@inject(TYPES.SignonService) private service : SignonService)
@@ -14,11 +14,24 @@ export class SignonController extends BaseHttpController {
     @httpPost('/register')
     async signup(@request() req: Request, @response() res: Response)  {
         try{
+            console.log("Starting registering");
             res.json(await this.service.register(req.body)).status(200);
+            console.log("Completed registering");
         }catch(error){
-            res.json(error).status(500);
+            console.error("Error Occurred", error);
+            res.sendStatus(500);
         }
         
+    }
+
+    @httpPost('/retrieveByEmail')
+    async retreiveByEmail(@request() req: Request, @response() res: Response)  {
+        try {
+            res.json(await this.service.retreieveByEmail(req.body['email'])).status(200);
+        } catch (error) {
+            console.error("Error Occurred", error);
+            res.sendStatus(500);
+        } 
     }
 
 }

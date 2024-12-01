@@ -9,7 +9,7 @@ export class ProfileRepository{
     }
 
     async saveProfile(profile:any): Promise<any>{
-        if(!profile){
+        if(profile){
             return await profile.save();
         }
     }

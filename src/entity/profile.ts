@@ -15,7 +15,8 @@ const profileSchema: Schema = new Schema(
     lastName: { type: Schema.Types.String, required: true},
     email: { type: Schema.Types.String, required: true, unique: true  },
     password: { type: Schema.Types.String, required: true, unique: true  },
-    isBusinessOwner: {type: Schema.Types.Boolean, required: true}
+    isBusinessOwner: {type: Schema.Types.Boolean, required: true},
+    isStripeOnboarded:{type: Schema.Types.Boolean, required: true},
   },
   { timestamps: true }
 );

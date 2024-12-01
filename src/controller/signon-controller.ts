@@ -13,7 +13,12 @@ export class SignonController extends BaseHttpController {
 
     @httpPost('/register')
     async signup(@request() req: Request, @response() res: Response)  {
-        res.json(await this.service.register(req.body, req.headers.origin)).status(200);
+        try{
+            res.json(await this.service.register(req.body)).status(200);
+        }catch(error){
+            res.json(error).status(500);
+        }
+        
     }
 
 }

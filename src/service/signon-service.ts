@@ -23,9 +23,9 @@ export class SignonService{
             console.log(token);
             const decoded = jwt.verify(token, jwtSecret);
             return decoded;
-          } catch (error) {
+        }catch (error) {
             throw new TypeError ('Invalid or expired token' );
-          }
+        }
     }
 
     async signin(signinRequest : SigninRequest) : Promise<any>{
@@ -45,7 +45,14 @@ export class SignonService{
           throw new TypeError ('Invalid credentials' );
         }
 
-        const token = jwt.sign({ accountId: profile._id, firstName: profile.firstName, lastName: profile.lastName, email: profile.email, isBusinessOwner: profile.isBusinessOwner }, jwtSecret, { expiresIn: '1h' });
+        const token = jwt.sign({ 
+            accountId: profile._id,
+            firstName: profile.firstName,
+            lastName: profile.lastName,
+            email: profile.email,
+            isBusinessOwner: profile.isBusinessOwner
+        }, jwtSecret, { expiresIn: '1h' });
+
         return {profile: profile, token: token};
     }
 
@@ -61,11 +68,14 @@ export class SignonService{
             throw new Error(`Profile existes with email: ${signupRequest.email}`);
         }
 
-        let stripeOnboardUrl : any;
+        let stripeAccount : {url:string, accountId:string} = {
+            url: "",
+            accountId: ""
+        };
         if(signupRequest.isBusinessOwner){
-            stripeOnboardUrl = await this.registerStripeAccount(signupRequest);
+            stripeAccount = await this.registerStripeAccount(signupRequest);
         }
-
+        console.log(stripeAccount);
         const encryptedPassword = await bcrypt.hash(signupRequest.password, 10);
         const newProfile = new Profile({
             firstName: signupRequest.firstName,
@@ -73,7 +83,8 @@ export class SignonService{
             email: signupRequest.email,
             password: encryptedPassword,
             isBusinessOwner: signupRequest.isBusinessOwner,
-            isStripeOnboarded: false
+            isStripeOnboarded: false,
+            stripeAccountId: stripeAccount.accountId
         });
         
 
@@ -81,7 +92,7 @@ export class SignonService{
 
         return {
             profile: saveProfile,
-            stripeSetUpUrl: stripeOnboardUrl
+            stripeSetUpUrl: stripeAccount.url
         }
 
    }
@@ -92,7 +103,7 @@ export class SignonService{
         return await this.repository.findProfileByEmail(email);
    }
 
-   async registerStripeAccount(signupRequest : SignupRequest){
+   async registerStripeAccount(signupRequest : SignupRequest) : Promise<any>{
         const account = await stripe.accounts.create({
             type: 'standard',
         });
@@ -104,7 +115,7 @@ export class SignonService{
             return_url: signupRequest.redirectUrl,
         });
 
-        return accountLink.url;
+        return { url: accountLink.url, accountId: account.id};
     }
 
 }
